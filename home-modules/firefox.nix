@@ -95,7 +95,7 @@ let
       };
       "NixOS Wiki" = {
         urls = [{
-          template = "https://nixos.wiki/index.php";
+          template = "https://wiki.nixos.org/w/index.php";
           params = [ { name = "search"; value = "{searchTerms}"; }];
         }];
         icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
@@ -141,6 +141,7 @@ let
       inherit search;
 
       settings = preferences;
+      containersForce = true;
     };
   };
 

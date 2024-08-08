@@ -18,7 +18,7 @@
   let
     system = "x86_64-linux";
     pkgs = import inputs.nixpkgs { inherit system; };
-    mkHost = { hostname, options }: inputs.nixpkgs.lib.nixosSystem {
+    mkHost = hostname: options: inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       inherit pkgs;
       modules = [
@@ -34,6 +34,7 @@
         ./modules/printing.nix
         inputs.chaotic.nixosModules.default
         {
+          users.users.gdm = { extraGroups = [ "video" ]; };
           users.users.bach = {
             isNormalUser = true;
             initialPassword = "nixos";
@@ -52,13 +53,10 @@
   in
   {
     nixosConfigurations = {
-      fractal = mkHost {
-        hostname = "fractal";
-        options = {
-          modules = [
-            ./hosts/fractal.nix
-          ];
-        };
+      fractal = mkHost "fractal" {
+        modules = [
+          ./hosts/fractal.nix
+        ];
       };
     };
   };

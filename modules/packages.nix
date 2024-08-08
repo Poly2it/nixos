@@ -10,8 +10,11 @@
 
     xdg-terminal-exec-mkhl
 
+    glxinfo
+
     morewaita-icon-theme
     nautilus
+    mission-center
   ];
 
   programs.neovim = {

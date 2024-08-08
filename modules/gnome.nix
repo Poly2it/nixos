@@ -10,12 +10,13 @@
     gnome.enable = true;
     # https://discourse.nixos.org/t/fix-gdm-does-not-start-gnome-wayland-even-if-it-is-selected-by-default-starts-x11-instead/24498
   };
+  services.xserver.modules = [ pkgs.xorg.xf86videofbdev ];
+  services.xserver.videoDrivers = [ "hyperv_fb" ];
   services.xserver.enable = true;
 
   programs.dconf.enable = true;
 
   environment.gnome.excludePackages = (with pkgs; [
-    gnome-tour
     baobab      # disk usage analyzer
     epiphany    # web browser
     gedit       # text editor
@@ -26,6 +27,7 @@
     snapshot    # camera
     geary       # email client
     seahorse    # password manager
+    gnome-tour
     gnome-system-monitor
     gnome-font-viewer
     gnome-console

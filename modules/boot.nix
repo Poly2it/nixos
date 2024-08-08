@@ -10,5 +10,6 @@
       efi.efiSysMountPoint = "/boot/efi";
     };
     kernelPackages = pkgs.linuxPackages_6_10;
+    kernelModules = [ "kvm-intel "];
   };
 }
