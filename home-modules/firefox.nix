@@ -1,4 +1,4 @@
-{ pkgs, inputs, lib, ...}:
+{ pkgs, inputs, ...}:
 
 let
   package = pkgs.firefox.overrideAttrs
