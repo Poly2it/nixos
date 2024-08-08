@@ -6,10 +6,7 @@
     git
 
     vim
-    neovim
     wl-clipboard
-
-    kitty
 
     xdg-terminal-exec-mkhl
 
@@ -17,8 +14,8 @@
     nautilus
   ];
 
-  services.xserver.excludePackages = with pkgs; [
-    xterm
-  ];
+  programs.neovim = {
+    enable = true;
+  };
 }
 

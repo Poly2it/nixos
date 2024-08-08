@@ -3,7 +3,7 @@
 {
   nix.gc = {
     automatic = true;
-    randomizedDelaySec = "14m";
+    randomizedDelaySec = "20m";
     options = "--delete-older-than 5d";
   };
 

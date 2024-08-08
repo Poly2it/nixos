@@ -9,6 +9,6 @@
       efi.canTouchEfiVariables = true;
       efi.efiSysMountPoint = "/boot/efi";
     };
-    kernelPackages = pkgs.linuxPackages_6_8;
+    kernelPackages = pkgs.linuxPackages_6_10;
   };
 }

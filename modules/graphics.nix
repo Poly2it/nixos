@@ -15,17 +15,7 @@
       vulkan-tools
       vulkan-validation-layers
     ];
-    package = (pkgs.mesa_git.override {
-      galliumDrivers = [
-        "nouveau"
-        "swrast"
-        "zink" 
-      ];
-      vulkanDrivers = [
-        "swrast"
-        "nouveau"
-      ];
-    }).drivers;
+    package = pkgs.mesa_git;
   };
 }
 

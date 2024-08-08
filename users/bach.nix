@@ -1,11 +1,14 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
-  home.packages = with pkgs; [
-    atool
-    httpie
+  imports  = [
+    ../home-modules/shell.nix
+    ../home-modules/gnome.nix
+    ../home-modules/gnome-extensions.nix
+    ../home-modules/fonts.nix
+    ../home-modules/kitty.nix
+    ../home-modules/firefox.nix
   ];
-  programs.bash.enable = true;
 
   home.stateVersion = "24.11"; 
 }
