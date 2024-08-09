@@ -231,6 +231,7 @@ let
     DisablePocket = true;
     DisableSystemAddonUpdate = true;
     DisableTelemetry = true;
+    DisplayMenuBar = "never";
     DontCheckDefaultBrowser = true;
     ExtensionUpdate = false;
     HardwareAcceleration = true;
@@ -351,6 +352,7 @@ let
     # Disable the feature tour (can Firefox just calm down?).
     "browser.firefox-view.feature-tour" = lock { screen = "FIREFOX_VIEW_SPOTLIGHT"; complete = true; };
     "browser.bookmarks.addedImportButton" = lock-false;
+    "widget.use-xdg-desktop-portal.file-picker" = "1";
 
     # Use system scroll.
     "mousewheel.system_scroll_override" = lock-true;
