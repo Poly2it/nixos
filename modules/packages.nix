@@ -15,6 +15,9 @@
     morewaita-icon-theme
     nautilus
     mission-center
+    metadata-cleaner
+    celluloid
+    eyedropper
   ];
 
   programs.neovim = {
