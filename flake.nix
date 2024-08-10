@@ -39,6 +39,7 @@
         ./modules/graphics.nix
         ./modules/sound.nix
         ./modules/gnome.nix
+        ./modules/fonts.nix
         ./modules/packages.nix
         ./modules/vm.nix
         ./modules/printing.nix

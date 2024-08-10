@@ -19,6 +19,13 @@ in
     "org/gnome/desktop/interface" = {
       monospace-font-name = "Iosevka 11";
       font-antialiasing = "rgba";
+      font-rgba-order = "rgb";
+    };
+
+    "org/gnome/desktop/privacy" = {
+      disable-camera = true;
+      report-technical-problems = false;
+      send-software-usage-stats = false;
     };
 
     "org/gnome/shell/keybinds" = {

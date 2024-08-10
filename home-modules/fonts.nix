@@ -7,7 +7,5 @@
     iosevka
     cantarell-fonts
   ];
-
-  fonts.fontconfig.enable = true;
 }
 
