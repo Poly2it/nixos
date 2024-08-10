@@ -353,6 +353,13 @@ let
     "browser.firefox-view.feature-tour" = lock { screen = "FIREFOX_VIEW_SPOTLIGHT"; complete = true; };
     "browser.bookmarks.addedImportButton" = lock-false;
     "widget.use-xdg-desktop-portal.file-picker" = "1";
+    # Disable UI tooltips, as they are just buggy, and I never use them. At the
+    # point where you have so many tabs you need to peek through each one to
+    # find what you're looking for, is a 300 ms sluggish 2010-era text overlay
+    # really that much better than just going through those tabs to find
+    # the content you're searching for? Either way requires an iteration of the
+    # ambigious tabs.
+    "ui.tooltip.delay_ms" = -1;
 
     # Use system scroll.
     "mousewheel.system_scroll_override" = lock-true;
