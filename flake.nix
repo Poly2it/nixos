@@ -18,7 +18,17 @@
   let
     system = "x86_64-linux";
     pkgs = import inputs.nixpkgs { inherit system; };
-    mkHost = hostname: options: inputs.nixpkgs.lib.nixosSystem {
+    mkUser = username: { configuration, home ? "/home/${username}" }: {
+      users.users.${username} = {
+        home = home;
+        group = "users";
+        isNormalUser = true;
+        initialPassword = "nixos";
+      };
+
+      home-manager.users.${username} = configuration;
+    };
+    mkHost = hostname: { modules }: inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       inherit pkgs;
       modules = [
@@ -36,20 +46,14 @@
         home-manager.nixosModules.home-manager
         {
           users.users.gdm = { extraGroups = [ "video" ]; };
-          users.users.bach = {
-            home = "/home/bach";
-            group = "users";
-            isNormalUser = true;
-            initialPassword = "nixos";
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = { inherit inputs; };
+            backupFileExtension = "shadowed";
           };
-
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.backupFileExtension = "shadowed";
-          home-manager.users.bach = import ./users/bach.nix;
         }
-      ];
+      ] ++ modules;
     }; 
   in
   {
@@ -57,6 +61,7 @@
       fractal = mkHost "fractal" {
         modules = [
           ./hosts/fractal.nix
+          (mkUser "bach" { configuration = import ./users/bach.nix; })
         ];
       };
     };
