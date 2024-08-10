@@ -26,5 +26,9 @@ in
     desktop = null;
     publicShare = null;
     templates = null;
+    extraConfig = {
+      "XDG_PROJECTS_DIR" = "${home}/projects";
+      "XDG_REPOS_DIR" = "${home}/repos";
+    };
   };
 }

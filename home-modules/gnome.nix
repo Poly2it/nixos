@@ -132,6 +132,8 @@ in
       "file://${home}/pictures Pictures"
       "file://${home}/videos Videos"
       "file:/// Root"
+      "file://${home}/projects Projects"
+      "file://${home}/repos Repos"
     ];
   };
 
