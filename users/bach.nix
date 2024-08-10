@@ -8,6 +8,7 @@
     ../home-modules/fonts.nix
     ../home-modules/kitty.nix
     ../home-modules/firefox.nix
+    ../home-modules/hidden-apps.nix
     ../home-modules/xdg.nix
   ];
 

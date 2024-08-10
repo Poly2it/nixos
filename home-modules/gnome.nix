@@ -101,8 +101,6 @@ in
         "org.gnome.Extensions.desktop"
         "com.github.finefindus.eyedropper.desktop"
         "fr.romainvigier.MetadataCleaner.desktop"
-        "nixos-manual.desktop"
-        "nvim.desktop"
       ];
       excluded-apps = [
         "org.gnome.FileRoller.desktop"
