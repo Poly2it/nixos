@@ -24,3 +24,8 @@ The included wallpapers fall under public domain.
   [Vertumnus](https://en.wikipedia.org/wiki/Vertumnus_(Arcimboldo)), 1591
 - Claude Monet - [Springtime](https://www.wikidata.org/wiki/Q7581196), 1872
 
+The configuration for hiding unwanted desktop files was
+[borrowed](https://forge.privatevoid.net/max/config/src/commit/502ed1151a5d71934d84728246300630f4577e1b/modules/desktop/hidden-apps.nix)
+with permission
+from [Max Headroom](https://github.com/max-privatevoid).
+
