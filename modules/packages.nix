@@ -5,6 +5,7 @@
     wget
     git
 
+    neovim
     vim
     wl-clipboard
 
@@ -19,9 +20,5 @@
     celluloid
     eyedropper
   ];
-
-  programs.neovim = {
-    enable = true;
-  };
 }
 
