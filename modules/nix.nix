@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  nix.package = pkgs.nixVersions.latest;
+
   nix.gc = {
     automatic = true;
     randomizedDelaySec = "20m";
@@ -10,7 +12,6 @@
   programs.nix-ld.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.package = pkgs.nixFlakes;
 
   system.stateVersion = "24.11";
 }
