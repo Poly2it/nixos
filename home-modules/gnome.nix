@@ -8,9 +8,44 @@ let
   ];
   mkAppLayoutEntry = name: position: (lib.hm.gvariant.mkDictionaryEntry [ name (mkPosition position) ]);
   wallpaperUri = "file://${home}/.local/share/backgrounds/${wallpaper}";
+  mkFolder = name: layout: {
+    inherit name;
+    apps = map (o: o + ".desktop") layout;
+    translate = false;
+  };
+  mkAppLayout = layout: {
+    "org/gnome/shell" = {
+      app-picker-layout = [(
+        lib.lists.imap0
+        (i: o: (
+          mkAppLayoutEntry
+          (if lib.isString o then "${o}.desktop" else o.name)
+          i
+        ))
+        layout
+      )];
+    };
+    "org/gnome/desktop/app-folders" = {
+      folder-children = map (o: o.name) (builtins.filter (o: lib.isAttrs o) layout);
+    };
+  } // (
+    lib.listToAttrs
+    (
+      map (o: {
+        name = "org/gnome/desktop/app-folders/folders/${o.name}";
+        value = o;
+      })
+      (builtins.filter (o: lib.isAttrs o) layout)
+    )
+  );
+  mkDash = favorites: {
+    "org/gnome/shell" = {
+      favorite-apps = map (o: "${o}.desktop") favorites;
+    };
+  };
 in
 {
-  dconf.settings = with lib.hm.gvariant; {
+  dconf.settings = lib.pipe (with lib.hm.gvariant; {
     "org/gnome/mutter" = {
       center-new-windows = true;
       edge-tiling = true;
@@ -45,12 +80,26 @@ in
 
     "org/gnome/nautilus/icon-view" = {
       default-zoom-level = "small";
+      default-folder-viewer = "list-view";
+    };
+
+    "org/gnome/nautilus/list-view" = {
+      default-zoom-level = "small";
+      use-tree-view = true;
+    };
+
+    "org/gnome/nautilus/preferences" = {
+      date-time-format = "detailed";
+      default-folder-viewer = "list-view";
     };
 
     "org/gnome/TextEditor" = {
       use-system-font = false;
       custom-font = "Iosevka 11";
       restore-session = false;
+      show-line-numbers = true;
+      indent-style = "tab";
+      tab-width = mkUint32 8;
     };
 
     "org/gnome/shell/weather" = {
@@ -59,6 +108,7 @@ in
 
     "org/gtk/gtk4/settings/file-chooser" = {
       show-hidden = true;
+      window-size = mkTuple [ 860 720 ];
     };
 
     "io/missioncenter/MissionCenter" = {
@@ -74,50 +124,46 @@ in
       picture-uri = wallpaperUri;
     };
 
-    "org/gnome/shell" = {
-      favorite-apps = [ "org.gnome.Nautilus.desktop" "firefox.desktop" "kitty.desktop" ];
-      app-picker-layout = [[
-        (mkAppLayoutEntry "org.gnome.TextEditor.desktop" 0)
-        (mkAppLayoutEntry "org.gnome.clocks.desktop" 1)
-        (mkAppLayoutEntry "org.gnome.Maps.desktop" 2)
-        (mkAppLayoutEntry "org.gnome.Weather.desktop" 3)
-        (mkAppLayoutEntry "org.gnome.Calculator.desktop" 4)
-        (mkAppLayoutEntry "Utilities" 5)
-        (mkAppLayoutEntry "File Handlers" 6)
-      ]];
-    };
-
-    "org/gnome/desktop/app-folders" = {
-      folder-children = [ "Utilities" "File Handlers" ];
-    };
-
     "org/gnome/desktop/app-folders/folders/Utilities" = {
-      name = "Utilities";
-      apps = [
-        "io.missioncenter.MissionCenter.desktop"
-        "org.gnome.Logs.desktop"
-        "org.gnome.DiskUtility.desktop"
-        "org.gnome.Settings.desktop"
-        "org.gnome.Extensions.desktop"
-        "com.github.finefindus.eyedropper.desktop"
-        "fr.romainvigier.MetadataCleaner.desktop"
-      ];
       excluded-apps = [
         "org.gnome.FileRoller.desktop"
       ];
       translate = false;
     };
-
-    "org/gnome/desktop/app-folders/folders/File Handlers" = {
-      name = "File Handlers";
-      apps = [
-        "org.gnome.Loupe.desktop"
-        "io.github.celluloid_player.Celluloid.desktop"
-        "org.gnome.FileRoller.desktop"
-      ];
-      translate = false;
-    };
-  };
+  }) [
+  (x: lib.attrsets.recursiveUpdate x (
+    mkAppLayout [
+      "org.gnome.TextEditor"
+      "org.gnome.clocks"
+      "org.gnome.Calendar"
+      "org.gnome.Maps"
+      "org.gnome.Weather"
+      "io.gitlab.news_flash.NewsFlash"
+      "org.gnome.Calculator"
+      (mkFolder "Utilities" [
+        "io.missioncenter.MissionCenter"
+        "org.gnome.Logs"
+        "org.gnome.DiskUtility"
+        "org.gnome.Settings"
+        "org.gnome.Extensions"
+        "com.github.finefindus.eyedropper"
+        "fr.romainvigier.MetadataCleaner"
+      ])
+      (mkFolder "File Handlers" [
+        "org.gnome.Loupe"
+        "io.github.celluloid_player.Celluloid"
+        "org.gnome.Papers"
+        "org.inkscape.Inkscape"
+        "org.gnome.FileRoller"
+      ])
+  ]))
+  (x: lib.attrsets.recursiveUpdate x (
+    mkDash [
+      "org.gnome.Nautilus"
+      "firefox"
+      "kitty"
+    ])
+  )];
 
   gtk = {
     enable = true;

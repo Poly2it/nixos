@@ -4,6 +4,7 @@
   home.sessionVariables = {
     EDITOR = "nvim";
     PS1 = "\\[\\033[1;95m\\033[1m\\]\\w\\[\\033[0m\\]\\$ ";
+    NIX_SHELL_PRESERVE_PROMPT = "1";
   };
 
   home.shellAliases = {

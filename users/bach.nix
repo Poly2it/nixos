@@ -10,8 +10,13 @@
     ../home-modules/firefox.nix
     ../home-modules/hidden-apps.nix
     ../home-modules/xdg.nix
+    ../home-modules/packages.nix
   ];
 
   home.stateVersion = "24.11"; 
+
+  home.shellAliases = {
+    nvim = "nix run \"$\{HOME}/.config/nvim\"";
+  };
 }
 
