@@ -1,7 +1,8 @@
 { lib, pkgs, inputs, ...}:
 
 let
-  package = pkgs.firefox.overrideAttrs
+  useX = false;
+  package = if useX then pkgs.firefox.overrideAttrs
     (oldAttrs:
     {
     buildCommand = oldAttrs.buildCommand +
@@ -10,7 +11,7 @@ let
       --set MOZ_ENABLE_WAYLAND 0 \
       --set MOZ_USE_XINPUT2 1
     '';
-  });
+  }) else pkgs.firefox;
 
   bookmarks = [
     {
@@ -480,10 +481,21 @@ let
     "network.http.sendSecureXSiteReferrer" = false;
     "toolkit.telemetry.enabled" = false;
     "toolkit.telemetry.server" = "";
-    "experiments.manifest.uri" = "";
     "toolkit.telemetry.unified" = false;
     # Make sure updater telemetry is disabled; see https://trac.torproject.org/25909.
     "toolkit.telemetry.updatePing.enabled" = false;
+    "toolkit.telemetry.pioneer-new-studies-available" = false;
+    "toolkit.telemetry.pioneerId" = "";
+    "privacy.partition.network_state" = true;
+    "toolkit.telemetry.shutdownPingSender.enabled" = false;
+    "toolkit.telemetry.shutdownPingSender.enabledFirstSession" = false;
+    "toolkit.telemetry.firstShutdownPing.enabled" = false;
+    "toolkit.telemetry.newProfilePing.enabled" = false;
+    "toolkit.telemetry.user_characteristics_ping.send-once" = false;
+    "toolkit.telemetry.prioping.enabled" = false;
+    "toolkit.telemetry.archive.enabled" = false;
+    "toolkit.telemetry.cachedClientID" = "";
+    "experiments.manifest.uri" = "";
     # Do not tell what plugins do we have enabled: https://mail.mozilla.org/pipermail/firefox-dev/2013-November/001186.html.
     "plugins.enumerable_names" = "";
     "plugin.state.flash" = 0;
