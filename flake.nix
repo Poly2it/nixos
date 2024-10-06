@@ -18,13 +18,17 @@
   outputs = inputs @ { nixpkgs, home-manager, flatpaks, ... }:
   let
     system = "x86_64-linux";
-    inherit (nixpkgs.pkgs) lib;
-    pkgs = import inputs.nixpkgs {
+    pkgs = import nixpkgs {
       inherit system;
       config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
         "cuda-merged"
+        "cudatoolkit"
+        "nvidia-x11"
+        "nvidia-settings"
+        "nvidia-persistenced"
       ];
     };
+    inherit (pkgs) lib;
     mkUser = username: { configuration, home ? "/home/${username}" }: {
       users.users.${username} = {
         home = home;
@@ -70,7 +74,7 @@
     nixosConfigurations = {
       fractal = mkHost "fractal" {
         modules = [
-          ./hosts/fractal.nix
+          ./hosts/fractal
           (mkUser "bach" { configuration = import ./users/bach.nix; })
         ];
       };
