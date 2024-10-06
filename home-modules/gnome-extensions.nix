@@ -20,8 +20,65 @@
       ];
     };
 
-    "org/gnome/shell/extensions/rounded-window-corners-reborn" = {
+    "org/gnome/shell/extensions/rounded-window-corners-reborn" =
+    let
+      mkProperty = k: v: (mkDictionaryEntry [ k (mkVariant v)]);
+      mkCornerSettings = {
+        left ? 1,
+        right ? 1,
+        top ? 1,
+        bottom ? 1,
+        show-while-maximized ? false,
+        show-while-in-fullscreen ? false,
+        radius ? 12,
+        smoothing ? 0,
+      }: [
+        (mkProperty "padding" [
+          (mkProperty "left"   (mkUint32 (assert lib.isInt left; left)))
+          (mkProperty "right"  (mkUint32 (assert lib.isInt right; right)))
+          (mkProperty "top"    (mkUint32 (assert lib.isInt top; top)))
+          (mkProperty "bottom" (mkUint32 (assert lib.isInt bottom; bottom)))
+        ])
+        (mkProperty "keep_rounded_corners" [
+          (mkProperty "maximized"  (assert lib.isBool show-while-maximized; show-while-maximized))
+          (mkProperty "fullscreen" (assert lib.isBool show-while-in-fullscreen; show-while-in-fullscreen))
+        ])
+        (mkProperty "border_radius" (mkUint32 (assert lib.isInt radius; radius)))
+        (mkProperty "smoothing" (
+          if (lib.isInt smoothing) then
+            (mkUint32 (assert lib.isInt smoothing; smoothing))
+          else
+            (mkDouble (assert lib.isFloat smoothing; smoothing))
+        ))
+      ];
+      mkCustomCornerSettings = windowClass: settings: (mkProperty windowClass (
+        (mkCornerSettings settings) ++
+        lib.lists.singleton (mkProperty "enabled" (
+          if (lib.hasAttr "enabled" settings) then
+            (assert lib.isBool settings.enabled; settings.enabled)
+          else
+            true
+          ))
+      ));
+    in
+    {
+      border-width = 0;
+      settings-version = (mkUint32 5);
       tweak-kitty-terminal = false;
+      global-rounded-corner-settings = (mkCornerSettings {
+        left = 1;
+        right = 1;
+        top = 1;
+        bottom = 1;
+      });
+      custom-rounded-corner-settings = [
+        (mkCustomCornerSettings "steamwebhelper" {
+          left = 2;
+          right = 3;
+          top = 2;
+          bottom = 3;
+        })
+      ];
     };
 
     "org/gnome/shell/extensions/vitals" = {
