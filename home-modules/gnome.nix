@@ -139,15 +139,18 @@ in
       "org.gnome.Maps"
       "org.gnome.Weather"
       "io.gitlab.news_flash.NewsFlash"
+      "signal-desktop"
       "org.gnome.Calculator"
       (mkFolder "Utilities" [
         "io.missioncenter.MissionCenter"
         "org.gnome.Logs"
+        "vim"
         "org.gnome.DiskUtility"
         "org.gnome.Settings"
         "org.gnome.Extensions"
         "com.github.finefindus.eyedropper"
         "fr.romainvigier.MetadataCleaner"
+        "mullvad-vpn"
       ])
       (mkFolder "File Handlers" [
         "org.gnome.Loupe"
@@ -155,6 +158,11 @@ in
         "org.gnome.Papers"
         "org.inkscape.Inkscape"
         "org.gnome.FileRoller"
+      ])
+      (mkFolder "Merriment" [
+        "dev.bragefuglseth.Keypunch"
+        "0ad"
+        "com.valvesoftware.Steam"
       ])
   ]))
   (x: lib.attrsets.recursiveUpdate x (

@@ -1,7 +1,7 @@
 { lib, pkgs, ... }:
 
 let
-  hiddenApps = [ "nvim.desktop" "nixos-manual.desktop" ];
+  hiddenApps = [ "nvim.desktop" "nixos-manual.desktop" "org.gnome.Totem.desktop" ];
 
   hiddenDesktopFile = pkgs.writeText "hidden.desktop" ''
     [Desktop Entry]
@@ -29,3 +29,4 @@ in
     ];
   };
 }
+
