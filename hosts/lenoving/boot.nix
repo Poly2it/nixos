@@ -15,7 +15,7 @@
     efiSysMountPoint = "/boot/efi";
   };
 
-  boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_6_10;
   boot.kernelModules = [ "kvm-intel "];
 
   boot.initrd.luks.devices = {

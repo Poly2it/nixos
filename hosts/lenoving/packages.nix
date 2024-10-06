@@ -13,7 +13,14 @@
     "flathub:app/dev.bragefuglseth.Keypunch//stable"
     "flathub:app/io.gitlab.news_flash.NewsFlash//stable"
     "flathub:app/com.github.IsmaelMartinez.teams_for_linux//stable"
+    "flathub:app/app.drey.Dialect//stable"
+    "flathub:app/io.github.nokse22.Exhibit//stable"
   ];
+
+  services.mullvad-vpn = {
+    enable = true;
+    package = pkgs.mullvad-vpn;
+  };
 
   services.syncthing = {
     enable = true;
