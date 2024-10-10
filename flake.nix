@@ -68,7 +68,7 @@
           };
         }
       ] ++ modules;
-    }; 
+    };
   in
   {
     nixosConfigurations = {

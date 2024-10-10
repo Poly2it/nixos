@@ -13,7 +13,7 @@
     ../home-modules/packages.nix
   ];
 
-  home.stateVersion = "24.11"; 
+  home.stateVersion = "24.11";
 
   home.shellAliases = {
     nvim = "nix run \"$\{HOME}/.config/nvim\"";
