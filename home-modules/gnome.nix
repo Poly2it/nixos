@@ -156,6 +156,8 @@ in
         "org.gnome.Loupe"
         "io.github.celluloid_player.Celluloid"
         "org.gnome.Papers"
+        "io.github.nokse22.Exhibit"
+        "io.bassi.Amberol"
         "org.inkscape.Inkscape"
         "org.gnome.FileRoller"
       ])
@@ -163,12 +165,14 @@ in
         "dev.bragefuglseth.Keypunch"
         "0ad"
         "com.valvesoftware.Steam"
+        "dev.geopjr.Calligraphy"
       ])
   ]))
   (x: lib.attrsets.recursiveUpdate x (
     mkDash [
       "org.gnome.Nautilus"
       "firefox"
+      "firefox-nightly"
       "kitty"
     ])
   )];
