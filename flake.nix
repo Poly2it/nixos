@@ -12,6 +12,7 @@
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
     };
+    firefox-nightly.url = "github:nix-community/flake-firefox-nightly";
     flatpaks.url = "github:GermanBread/declarative-flatpak/stable-v3";
   };
 
@@ -33,7 +34,7 @@
       users.users.${username} = {
         home = home;
         group = "users";
-        extraGroups = [ "systemd-journal" ];
+        extraGroups = [ "adbusers" "kvm" "systemd-journal" ];
         isNormalUser = true;
         initialPassword = "nixos";
       };

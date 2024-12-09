@@ -2,7 +2,7 @@
 
 let
   useX = false;
-  package = if useX then pkgs.firefox.overrideAttrs
+  package = if useX then pkgs.firefox-devedition.overrideAttrs
     (oldAttrs:
     {
     buildCommand = oldAttrs.buildCommand +
@@ -11,7 +11,7 @@ let
       --set MOZ_ENABLE_WAYLAND 0 \
       --set MOZ_USE_XINPUT2 1
     '';
-  }) else pkgs.firefox;
+  }) else inputs.firefox-nightly.packages.${pkgs.stdenv.hostPlatform.system}.firefox-nightly-bin;
 
   bookmarks = [
     {
@@ -42,6 +42,23 @@ let
           name = "MyNixOS";
           tags = [ "nix" ];
           url = "https://mynixos.com/";
+        }
+      ];
+    }
+  ];
+
+  bookmarksI2p = [
+    {
+      name = "I2P";
+      toolbar = true;
+      bookmarks = [
+        {
+          name = "List of I2P Sites";
+          url = "http://mqtlargpv4247iylywxw6ibi6qpz6my5duqm33c4lcdhjg5yfh7q.b32.i2p/rollcall/i2p.html";
+        }
+        {
+          name = "eepstatus";
+          url = "http://identiguy.i2p/";
         }
       ];
     }
@@ -107,7 +124,7 @@ let
       "NixOS Wiki" = {
         urls = [{
           template = "https://wiki.nixos.org/w/index.php";
-          params = [ { name = "search"; value = "{searchTerms}"; }];
+          params = [{ name = "search"; value = "{searchTerms}"; }];
         }];
         icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
         definedAliases = [ "@nw" ];
@@ -115,45 +132,88 @@ let
       "MyNixOS" = {
         urls = [{
           template = "https://mynixos.com/search";
-          params = [ { name = "q"; value = "{searchTerms}"; }];
+          params = [{ name = "q"; value = "{searchTerms}"; }];
         }];
         icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
         definedAliases = [ "@mn" ];
       };
+      "Hacker News" = {
+        urls = [{
+          template = "https://hn.algolia.com";
+          params = [
+            { name = "dateRange"; value = "all"; }
+            { name = "page"; value = "0"; }
+            { name = "prefix"; value = "false"; }
+            { name = "query"; value = "{searchTerms}"; }
+            { name = "sort"; value = "byPopularity"; }
+            { name = "type"; value = "story"; }
+          ];
+        }];
+        icon = "${pkgs.fetchurl {
+          url = "https://news.ycombinator.com/y18.svg";
+          sha256 = "sha256-4bZiK26hXx9I39pucgJlzUJpgdKnrh+dfd64QJiXxv8=";
+        }}";
+        definedAliases = [ "@hn" ];
+      };
     };
   };
+
+  searchI2p = {
+    force = true;
+    default = "";
+    order = [ "" ];
+    engines = {
+      "Google".metaData.hidden = true;
+      "Bing".metaData.hidden = true;
+      "eBay".metaData.hidden = true;
+      "DuckDuckGo".metaData.hidden = true;
+      "Wikipedia (en)".metaData.hidden = true;
+    };
+  };
+
+  userChrome = ''
+    @import "firefox-gnome-theme/userChrome.css";
+
+    #webrtcIndicator {
+      display: none;
+    }
+
+    #firefox-view-button {
+      display: none;
+    }
+
+    /* Disable the "Import Bookmarks" button. */
+    #import-button {
+      display: none;
+    }
+
+    #tracking-protection-icon-container {
+      margin-right: -4px;
+    }
+
+    #identity-box {
+      margin-right: -4x !important;
+      margin-left: 2px !important;
+    }
+
+    #identity-icon-box {
+      margin-right: -4x !important;
+    }
+  '';
+
+  userContent = ''
+    @import "firefox-gnome-theme/userContent.css";
+  '';
 
   profiles = {
     default = {
       id = 0;
       name = "default";
       isDefault = true;
-      userChrome = ''
-        @import "firefox-gnome-theme/userChrome.css";
 
-        #webrtcIndicator {
-          display: none;
-        }
+      inherit userContent userChrome bookmarks search;
 
-        #firefox-view-button {
-          display: none;
-        }
-
-        /* Disable the "Import Bookmarks" button. */
-        #import-button {
-          display: none;
-        }
-
-        @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-      '';
-      userContent = ''
-        @import "firefox-gnome-theme/userContent.css";
-      '';
-
-      inherit bookmarks;
-      inherit search;
-
-      settings = (mkUserPreferences preferences-base) // preferences-extended;
+      settings = preferencesBase // preferencesExtended;
       containersForce = true;
     };
 
@@ -161,32 +221,44 @@ let
       id = 1;
       name = "unsafe";
       isDefault = false;
-      userChrome = ''
-        @import "firefox-gnome-theme/userChrome.css";
 
-        #webrtcIndicator {
+      inherit userContent userChrome bookmarks search;
+
+      settings = preferencesBase;
+      containersForce = true;
+    };
+
+    i2p = {
+      id = 2;
+      name = "i2p";
+      isDefault = false;
+      userChrome = lib.strings.concatStringsSep "\n" [ userChrome ''
+        /* Disable the "Not Secure" badge. */
+        #identity-box {
           display: none;
         }
 
-        #firefox-view-button {
+        #urlbar-searchmode-switcher {
           display: none;
         }
 
-        /* Disable the "Import Bookmarks" button. */
-        #import-button {
-          display: none;
+        #urlbar .urlbar-input-box {
+          margin-left: 6px;
         }
 
         @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-      '';
-      userContent = ''
-        @import "firefox-gnome-theme/userContent.css";
-      '';
+      '' ];
 
-      inherit bookmarks;
-      inherit search;
+      inherit userContent;
 
-      settings = mkUserPreferences preferences-base;
+      bookmarks = bookmarksI2p;
+      search = searchI2p;
+
+      extensions = [
+        (pkgs.callPackage ./firefox-i2p {})
+      ];
+
+      settings = preferencesBase // preferencesExtended // preferencesI2p;
       containersForce = true;
     };
   };
@@ -201,15 +273,19 @@ let
       install_url = "https://addons.mozilla.org/firefox/downloads/file/4280925/libredirect-2.8.4.xpi";
       installation_mode = "force_installed";
     };
+    "i2p@polybit" = {
+      installation_mode = "force_installed";
+    };
   };
 
-  ext-extensions = {
+  extensionSettings = {
     # https://github.com/libredirect/browser_extension/blob/b3457faf1bdcca0b17872e30b379a7ae55bc8fd0/src/config.json
     "7esoorv3@alefvanoon.anonaddy.me" = {
       services.options.youtube.enabled = true;
       services.options.reddit.enabled = true;
     };
     # https://github.com/gorhill/uBlock/blob/master/platform/common/managed_storage.json
+    # https://github.com/gorhill/uBlock/blob/6c6ac6c7a7bd6e08ba4e70fbd102e7f41af544ef/src/settings.html
     "uBlock0@raymondhill.net".adminSettings = {
       userSettings = {
         uiTheme = "light";
@@ -260,9 +336,8 @@ let
   };
 
   policies = {
-    Preferences = mkPolicyPreferences preferences-base;
     ExtensionSettings = extensions;
-    "3rdparty".Extensions = ext-extensions;
+    "3rdparty".Extensions = extensionSettings;
     AllowedDomainsForApps = "";
     AppAutoUpdate = false;
     AutofillCreditCardEnabled = false;
@@ -300,7 +375,7 @@ let
     StartDownloadsInTempDirectory = false;
   };
 
-  preferences-base = {
+  preferencesBase = {
     # GNOME theme.
     "gnomeTheme.bookmarksToolbarUnderTabs" = true;
 
@@ -411,6 +486,8 @@ let
     # ambigious tabs.
     "ui.tooltip.delay_ms" = -1;
     "browser.translations.neverTranslateLanguages" = "sv";
+
+    "browser.urlbar.scotchBonnet.enableOverride" = false;
 
     # Use system scroll.
     "mousewheel.system_scroll_override" = true;
@@ -798,7 +875,7 @@ let
     # https://blog.privacyguides.org/2024/07/14/mozilla-disappoints-us-yet-again-2/
     "dom.private-attribution.submission.enabled" = false;
   };
-  preferences-extended = {
+  preferencesExtended = {
     # Don't install openh264 codec.
     "media.gmp-gmpopenh264.enabled" = false;
     "media.gmp-eme-adobe.enabled" = false;
@@ -809,7 +886,22 @@ let
     # Disable WebGL
     "webgl.disabled" = true;
   };
+  preferencesI2p = {
+    "network.proxy.http" = localhost;
+    "network.proxy.port" = 4444;
+    "network.proxy.share_proxy_settings" = true;
+    "media.peerconnection.ice.proxy_only" = true;
+    "dom.security.https_only_mode" = false;
+    "xpinstall.signatures.required" = false;
 
+    # Disable search in address bar (until a good search engine emerges).
+    "keyword.enable" = false;
+    "browser.fixup.alternate.enabled" = false;
+
+    # While enabling extension scopes by default seems to work, the I2P extension
+    # is blocked until reactivation elsewhere.
+    # "extensions.autoDisableScopes" = 0;
+  };
   # We want to lock as many preferences as possible. Having the configuration
   # state be mutable is a light security risk, and conflicts with the goal of
   # immutability.
@@ -904,11 +996,10 @@ in
 {
   home.file.".mozilla/firefox/default/chrome/firefox-gnome-theme".source = inputs.firefox-gnome-theme;
   home.file.".mozilla/firefox/unsafe/chrome/firefox-gnome-theme".source = inputs.firefox-gnome-theme;
+  home.file.".mozilla/firefox/i2p/chrome/firefox-gnome-theme".source = inputs.firefox-gnome-theme;
   programs.firefox = {
     enable = true;
-    inherit package;
-    inherit policies;
-    inherit profiles;
+    inherit package policies profiles;
   };
 }
 

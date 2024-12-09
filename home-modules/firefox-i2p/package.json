@@ -1,0 +1,9 @@
+{
+	"webExt": {
+		"sourceDir": "./src/",
+		"build": {
+			"overwriteDest": true
+		}
+	}
+}
+

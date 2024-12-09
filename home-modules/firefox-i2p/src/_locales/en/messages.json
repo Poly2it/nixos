@@ -1,0 +1,10 @@
+{
+    "extensionName": {
+        "message": "I2P",
+        "description": "name of the extension"
+    },
+    "extensionDescription": {
+        "message": "Proxy and restrict browser to use the I2P protocol.",
+        "description": "description of the extension"
+    }
+}

@@ -12,6 +12,10 @@ This project inherits the excellent Firefox preferences distributed by
 [hnhx](https://github.com/hnhx) in their
 [user.js repository](https://github.com/hnhx/user.js).
 
+The I2P add-on included in the I2P profile in Firefox is based on
+[i2p_browser_extension](https://github.com/ManeraKai/i2p_browser_extension) by
+[ManeraKai](https://github.com/ManeraKai).
+
 Some websites which have been of great help so far with creating this
 configuration are:
 
